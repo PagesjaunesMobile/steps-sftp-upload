@@ -1,0 +1,61 @@
+title: "sFTP Upload"
+summary: You get what you see, upload a file or directory to the target directory
+description: |-
+  Upload a single file or a folder (recursively) to an FTP server.
+website: https://github.com/bitrise-io/steps-sftp-upload
+source_code_url: https://github.com/bitrise-io/steps-sftp-upload
+support_url: https://github.com/bitrise-io/steps-sftp-upload/issues
+host_os_tags:
+  - osx-10.10
+type_tags:
+  - sftp
+  - uploader
+  - deploy
+is_requires_admin_user: false
+is_always_run: false
+is_skippable: false
+dependencies: []
+run_if: .IsCI
+inputs:
+  - auth_ssh_private_key: "$SSH_RSA_PRIVATE_KEY"
+    opts:
+      title: "Auth: SSH private key - without a passphrase!"
+  - hostname: ""
+    opts:
+      title: "Host"
+      summary: ""
+      description: |-
+        Host of the target sFTP (example: ftp.someserver.com)
+      is_required: true
+      is_expand: false
+      is_required: true
+      is_dont_change_value: false
+  - username: ""
+    opts:
+      title: "Username"
+      summary: ""
+      description: ""
+      is_required: true
+      is_expand: false
+      is_dont_change_value: false
+  - upload_source_path: ""
+    opts:
+      title: "Source path"
+      description: |
+        The source (local) file or directory for the FTP upload.
+        Format examples: "$HOME/temp" or "$HOME/temp/" or "./relative/path/to")
+      summary: ""
+      is_required: true
+      is_expand: true
+      is_dont_change_value: false
+  - upload_target_path: ""
+    opts:
+      title: "Target / remote path"
+      description: |
+        The target (remote) path for the FTP upload.
+        Target is handled as directory if ends with "/", file otherwise.
+      summary: ""
+      is_required: true
+      is_expand: false
+      is_dont_change_value: false
+outputs: []
