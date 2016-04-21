@@ -135,7 +135,7 @@ def do_upload()
     puts system(%Q{#{$this_script_path}/#{ssh_no_prompt_file} #{$options[:username]}@#{$options[:hostname]} 'ls -l'})
   end
   
-  Net::SFTP.start($options[:hostname], $options[:username], keys: $options[:private_key_file_path] ) do |sftp|
+ sftp = Net::SFTP.start($options[:hostname], $options[:username], keys: $options[:private_key_file_path] ) #do |sftp|
     
     remote_path = ""
     $options[:destination_dir].split('/').map do |dir|
@@ -168,7 +168,7 @@ def do_upload()
         return true
       end
     end
-  end
+#  end
   return is_upload_success
 end
 
