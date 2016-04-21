@@ -56,6 +56,6 @@ inputs:
         Target is handled as directory if ends with "/", file otherwise.
       summary: ""
       is_required: true
-      is_expand: false
+      is_expand: true
       is_dont_change_value: false
 outputs: []
