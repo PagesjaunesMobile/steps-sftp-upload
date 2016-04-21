@@ -16,6 +16,7 @@ if [ -n "${BITRISE_STEP_FORMATTED_OUTPUT_FILE_PATH}" ] ; then
 	formatted_output_file_path="${BITRISE_STEP_FORMATTED_OUTPUT_FILE_PATH}"
 fi
 
+ls -l $BITRISE_SOURCE_DIR
 ruby "${THIS_SCRIPT_DIR}/sftp_upload.rb" \
 	--source-dir="${upload_source_path}" \
 	--dest-dir="${upload_target_path}" \
