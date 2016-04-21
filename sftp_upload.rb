@@ -147,7 +147,7 @@ def do_upload()
       end
     end
   
-    is_upload_success = sftp.upload!( $options[:source_dir], $options[:destination_dir])  do |event, uploader, *args|
+    is_upload_success = sftp.upload!( $options[:source_dir], $options[:destination_dir]+"/reports.html")  do |event, uploader, *args|
       case event
       when :open then
         # args[0] : file metadata
