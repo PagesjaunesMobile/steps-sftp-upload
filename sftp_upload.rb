@@ -161,10 +161,11 @@ def do_upload()
       return true
   end
 end
- is_upload_success.methods unless is_upload_success.nil?
+
     ssh_no_prompt_file = 'ssh_no_prompt.sh'
     if $options[:private_key_file_path]
       ssh_no_prompt_file = 'ssh_no_prompt_with_id.sh'
+      puts system(%Q{#{$this_script_path}/#{ssh_no_prompt_file} ls -l})
     end
   end
   return is_upload_success
