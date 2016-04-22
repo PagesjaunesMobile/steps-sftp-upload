@@ -132,43 +132,48 @@ def do_upload()
   if $options[:private_key_file_path]
     puts system(%Q{ls -l #{$this_script_path}})
     ssh_no_prompt_file = 'ssh_no_prompt.sh'
-    puts system(%Q{#{$this_script_path}/#{ssh_no_prompt_file} #{$options[:username]}@#{$options[:hostname]} 'ls -l'})
+    system(%Q{#{$this_script_path}/#{ssh_no_prompt_file} #{$options[:username]}@#{$options[:hostname]} 'ls -l'})
   end
   
- sftp = Net::SFTP.start($options[:hostname], $options[:username], keys: $options[:private_key_file_path] ) #do |sftp|
+  sftp = Net::SFTP.start($options[:hostname], $options[:username], keys: $options[:private_key_file_path] ) #do |sftp|
     
-    remote_path = ""
-    $options[:destination_dir].split('/').map do |dir|
-      remote_path = File.join remote_path, dir
-      begin
-        sftp.dir.entries(remote_path)
-      rescue
-        sftp.mkdir! remote_path
-      end
+  remote_path = ""
+  $options[:destination_dir].split('/').map do |dir|
+    remote_path = File.join remote_path, dir
+    begin
+      sftp.dir.entries(remote_path)
+    rescue
+      sftp.mkdir! remote_path
     end
+  end
+  target = $options[:destination_dir]
+  if File.file? $options[:source_dir] then
+    source_file = $options[:destination_dir].split('/').pop
+    target = File.join target, source_file
+  end
   
-    is_upload_success = sftp.upload!( $options[:source_dir], $options[:destination_dir]+"/reports.html")  do |event, uploader, *args|
-      case event
-      when :open then
-        # args[0] : file metadata
-        puts "starting upload: #{args[0].local} -> #{args[0].remote} (#{args[0].size} bytes}"
-      when :put then
-        # args[0] : file metadata
-        # args[1] : byte offset in remote file
-        # args[2] : data being written (as string)
-        puts "writing #{args[2].length} bytes to #{args[0].remote} starting at #{args[1]}"
-      when :close then
-        # args[0] : file metadata
-        puts "finished with #{args[0].remote}"
-      when :mkdir then
-        # args[0] : remote path name
-        puts "creating directory #{args[0]}"
-      when :finish then
-        puts "all done!"
-        return true
-      end
+  is_upload_success = sftp.upload!( $options[:source_dir], target )  do |event, uploader, *args|
+    case event
+    when :open then
+      # args[0] : file metadata
+      puts "starting upload: #{args[0].local} -> #{args[0].remote} (#{args[0].size} bytes}"
+    when :put then
+      # args[0] : file metadata
+      # args[1] : byte offset in remote file
+      # args[2] : data being written (as string)
+      puts "writing #{args[2].length} bytes to #{args[0].remote} starting at #{args[1]}"
+    when :close then
+      # args[0] : file metadata
+      puts "finished with #{args[0].remote}"
+    when :mkdir then
+      # args[0] : remote path name
+      puts "creating directory #{args[0]}"
+    when :finish then
+      puts "all done!"
+      return true
     end
-#  end
+  end
+  
   return is_upload_success
 end
 
@@ -177,8 +182,8 @@ puts "upload Is Success?: #{is_upload_success}"
 
 
 if options[:private_key_file_path]
-  puts " (i) Removing private key file: #{options[:private_key_file_path]}"
-  system(%Q{rm -P #{options[:private_key_file_path]}})
+puts " (i) Removing private key file: #{options[:private_key_file_path]}"
+system(%Q{rm -P #{options[:private_key_file_path]}})
 end
 
 exit (is_upload_success ? 0 : 1)
