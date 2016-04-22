@@ -148,7 +148,7 @@ def do_upload()
   end
   target = $options[:destination_dir]
   if File.file? $options[:source_dir] then
-    source_file = $options[:destination_dir].split('/').pop
+    source_file = $options[:source_dir].split('/').pop
     target = File.join target, source_file
   end
   
