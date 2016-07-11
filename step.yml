@@ -14,29 +14,30 @@ type_tags:
 is_requires_admin_user: false
 is_always_run: false
 is_skippable: false
-dependencies: []
+deps:
+  gem: 
+    - name: net-sftp
 run_if: .IsCI
 inputs:
   - auth_ssh_private_key: "$SSH_RSA_PRIVATE_KEY"
     opts:
       title: "Auth: SSH private key - without a passphrase!"
-  - hostname: ""
+  - hostname: "$HOSTNAME"
     opts:
       title: "Host"
       summary: ""
       description: |-
         Host of the target sFTP (example: ftp.someserver.com)
       is_required: true
-      is_expand: false
-      is_required: true
+      is_expand: true
       is_dont_change_value: false
-  - username: ""
+  - username: "$USERNAME"
     opts:
       title: "Username"
       summary: ""
       description: ""
       is_required: true
-      is_expand: false
+      is_expand: true
       is_dont_change_value: false
   - upload_source_path: ""
     opts:

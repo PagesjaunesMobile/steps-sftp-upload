@@ -49,6 +49,8 @@ puts '========== Configs =========='
 puts " * source: #{options[:source_dir]}   #{File.directory?(options[:source_dir])}"
 puts " * destination_dir: #{options[:destination_dir]}"
 puts " * auth_ssh_key_raw: #{options[:auth_ssh_key_raw].to_s.empty? ? 'no SSH key provided' : '*****'}"
+puts " * username: #{options[:username].to_s.empty? ? 'username is not set' : '*****'}"
+puts " * hostname: #{options[:hostname].to_s.empty? ? 'no SSH hostname provided' : options[:hostname]}"
 puts
 
 unless options[:source_dir] and options[:source_dir].length > 0
@@ -132,7 +134,7 @@ def do_upload()
   if $options[:private_key_file_path]
     puts system(%Q{ls -l #{$this_script_path}})
     ssh_no_prompt_file = 'ssh_no_prompt.sh'
-    system(%Q{#{$this_script_path}/#{ssh_no_prompt_file} #{$options[:username]}@#{$options[:hostname]} 'ls -l'})
+    system(%Q{#{$this_script_path}/#{ssh_no_prompt_file} #{$options[:username]}@#{$options[:hostname]} "ls -l #{$options[:destination_dir]}"})
   end
   
   sftp = Net::SFTP.start($options[:hostname], $options[:username], keys: $options[:private_key_file_path] ) #do |sftp|
@@ -151,7 +153,7 @@ def do_upload()
     source_file = $options[:source_dir].split('/').pop
     target = File.join target, source_file
   end
-  
+  system(%Q{pwd && ls -l #{$options[:source_dir]}})
   is_upload_success = sftp.upload!( $options[:source_dir], target )  do |event, uploader, *args|
     case event
     when :open then

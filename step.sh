@@ -10,7 +10,8 @@ THIS_SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 #echo $(ruby -ropenssl -e 'puts OpenSSL::OPENSSL_VERSION')
 #curl -O https://raw.githubusercontent.com/net-ssh/net-ssh/master/net-ssh-public_cert.pem
 #gem cert --add net-ssh-public_cert.pem
-gem install net-sftp  #-P HighSecurity
+##gem install net-sftp  #-P HighSecurity
+
 formatted_output_file_path=''
 if [ -n "${BITRISE_STEP_FORMATTED_OUTPUT_FILE_PATH}" ] ; then
 	formatted_output_file_path="${BITRISE_STEP_FORMATTED_OUTPUT_FILE_PATH}"
